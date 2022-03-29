@@ -1,0 +1,11 @@
+import { Request, Response } from 'firebase-functions'
+export const authHookHandler = async (request: Request, response: Response) => {
+    try {
+        const customHandler = request.handlers["secret-handler"]
+        if (!customHandler || customHandler !== "trust-me")
+            throw new Error("no header or invalid")
+        response.status(200).send({ "x-hasura-role": "user" })
+    } catch (error: any) {
+        response.status(401).send({ message: error?.message })
+    }
+}

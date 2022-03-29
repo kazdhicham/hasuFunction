@@ -1,0 +1,44 @@
+const FirebaseConfig = require('./firebaseConfig');
+const firestore = FirebaseConfig.firestore;
+const functions = FirebaseConfig.functions;
+
+exports.onCreateSelection = functions.firestore.
+    document(`selections/{selectionId}`).onCreate(async (snapshot) => {
+        const countDocRef = firestore.collection('selectionCounts').doc('all')
+        const countDoc = await countDocRef.get()
+        if (countDoc.exists) {
+            countDocRef.update({ count: admin.firestore.FieldValue.increment(1) })
+        } else {
+            countDocRef.set({ count: 1 })
+        }
+        const selections = snapshot.data()
+        if (selections.isPublished) {
+            const countPublishedRef = firestore.collection('selectionCounts').doc('published')
+            const countPublished = await countPublishedRef.get()
+            if (countPublished.exists) {
+                countPublishedRef.update({ count: admin.firestore.FieldValue.increment(1) })
+            } else {
+                countPublishedRef.set({ count: 1 })
+            }
+        }
+    });
+
+exports.onDeleteSelection = functions.firestore.document(`selections/{selectionId}`).onDelete(async (snapshot: any) => {
+    const countDocRef = firestore.collection('selectionCounts').doc('all')
+    const countDoc = await countDocRef.get()
+    if (countDoc.exists) {
+        countDocRef.update({ count: admin.firestore.FieldValue.increment(1) })
+    } else {
+        countDocRef.set({ count: 1 })
+    }
+    const selections = snapshot.data()
+    if (selections.isPublished) {
+        const countPublishedRef = firestore.collection('selectionCounts').doc('published')
+        const countPublished = await countPublishedRef.get()
+        if (countPublished.exists) {
+            countPublishedRef.update({ count: admin.firestore.FieldValue.increment(1) })
+        } else {
+            countPublishedRef.set({ count: 1 })
+        }
+
+

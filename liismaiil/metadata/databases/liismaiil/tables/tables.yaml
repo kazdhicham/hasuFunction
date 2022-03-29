@@ -1,0 +1,3 @@
+- "!include public_cards.yaml"
+- "!include public_tablets.yaml"
+- "!include public_viewers.yaml"

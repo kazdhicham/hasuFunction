@@ -1,0 +1,21 @@
+actions:
+- name: createViewer
+  definition:
+    kind: synchronous
+    handler: http://localhost:3000
+  permissions:
+  - role: anonymous
+  comment: createUser
+- name: login
+  definition:
+    kind: synchronous
+    handler: http://host.docker.internal:5001/
+custom_types:
+  enums: []
+  input_objects:
+  - name: Credential
+  - name: ViewerInput
+  objects:
+  - name: LoginObject
+  - name: ViewerOutput
+  scalars: []

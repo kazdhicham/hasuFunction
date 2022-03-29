@@ -1,0 +1,30 @@
+type Mutation {
+  createViewer(
+    viewer: ViewerInput!
+  ): ViewerOutput
+}
+
+type Mutation {
+  login(
+    credential: Credential!
+  ): LoginObject
+}
+
+input Credential {
+  login: String!
+  password: String!
+}
+
+input ViewerInput {
+  login: String!
+  password: String!
+}
+
+type LoginObject {
+  accessToken: String!
+}
+
+type ViewerOutput {
+  login: String!
+}
+

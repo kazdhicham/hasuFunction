@@ -1,0 +1,63 @@
+import * as functions from 'firebase-functions'
+import { createTestAccount, createTransport, getTestMessageUrl}     from 'nodemailer'
+/* export const loginHandler = async (request, response) => {
+    try {
+        //const { email, password } = request.body.input.credential
+        response.status(200).send("bismi ALLAH")
+    } catch (error) {
+        response.status(500).send({ message: error?.message })
+    }
+} */
+const GET_TABLET_QUERY=`query GetTablet(id:uuid){
+
+}`
+export const notifyNewTabletHandler = functions.https.onRequest(async({ request,response}) => {
+    try {
+      const { event } = request.body;
+      const { tablet_id} = event?.data?.new;
+      const { session_variables}   =  event
+      const tabletQuery = await fetch("http://localhost:8080/v1/graphql",{
+          method:'POST',
+          body:JSON.stringify({
+                  query: GET_TABLET_QUERY,
+                  variables:{
+                      id: tablet_id
+                  } }),
+                  headers:{...session_variables, ...request.headers}
+          }) 
+        const {data:{tablet_by_pk}} = await tabletQuery.json()
+
+        const testAcount = await createTestAccount()
+        const transporter = createTransport({
+            host:'smtp.ethereal.email',
+            port: 587,
+            secure: flase,
+            auth:{
+                user:testAcount.user,
+                pass: testAcount.pass
+            }
+        })
+        const sendEmail = await transporter.sendMail({
+            from:"from function",
+            to:'' ,
+            subject: "notification",
+            html:` 
+            <html>
+            <head>
+            </head>
+            <body>
+            <h1> Hi </h1>
+            <br> <br>
+            <p>You  create a new tablet
+            </p>
+            
+            </html>            
+            
+            `
+        })
+      //const { email, password } = request.body.input.credential
+        response.status(200).send("Tablet evolution")
+    } catch (error) {
+        response.status(500).send({ message: error?.message })
+    }
+})

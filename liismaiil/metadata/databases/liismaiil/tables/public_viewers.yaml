@@ -1,0 +1,31 @@
+table:
+  name: viewers
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns: []
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - bio
+    - level
+    - login
+    filter: {}
+  role: anonymous
+- permission:
+    columns: []
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns: []
+    filter: {}
+  role: user
+delete_permissions:
+- permission:
+    filter: {}
+  role: user
